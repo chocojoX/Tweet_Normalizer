@@ -21,6 +21,7 @@ def run(input_path, output_path):
 
 
 if __name__=="__main__":
-    input_path = "C:\\Users\\Joseph\\Desktop\\Travail\\4A\\NLP\\TD3\\toy_dataset.txt"
-    output_path = "C:\\Users\\Joseph\\Desktop\\Travail\\4A\\NLP\\TD3\\toy_dataset_corrected.txt"
+    input_path = "C:\\Users\\Joseph\\Desktop\\Travail\\4A\\NLP\\TD3\\Tweet_Normalizer\\toy_dataset.txt"
+    output_path = "C:\\Users\\Joseph\\Desktop\\Travail\\4A\\NLP\\TD3\\Tweet_Normalizer\\toy_dataset_corrected.txt"
+    lines = [line.rstrip('\n') for line in open(input_path)]
     run(input_path, output_path)
