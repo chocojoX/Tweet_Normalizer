@@ -82,7 +82,8 @@ class Corrector(object):
 
 
 if __name__=="__main__":
-    word1 = "Hello"
-    word2 = "Hela"
-    print "Theoretical distance between %s and %s : %i" %(word1, word2, 2)
-    print "Computed distance : %i"%compute_distance(word1, word2)
+    word1 = "some"
+    word2 = "som"
+    cor = Corrector()
+    print "Theoretical distance between %s and %s : %i" %(word1, word2, 1)
+    print "Computed distance : %i"%cor.compute_distance(word1, word2)
