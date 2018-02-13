@@ -7,26 +7,38 @@ import time
 
 
 class Normalizor(object):
-    def __init__(self):
+    def __init__(self, tokenizer="tweet", punctuation=True):
         self.contextualizer = Contextualizer()
         self.corrector = Corrector(word2index=self.contextualizer.word2index, index2word=self.contextualizer.index2word)
+        self.tokenizer_type = tokenizer
+        self.keep_punctuation = punctuation
+        if self.tokenizer_type=="tweet":
+            self.tokenizer = TweetTokenizer()
+
 
 
     def predict(self, sentence):
         sentence = sentence.lower()
-        import pdb; pdb.set_trace()
-        sentence = sentence.translate(None, string.punctuation)
-        list_of_words = self.contextualizer.parse_input(sentence)
+        if not self.keep_punctuation:
+            sentence = sentence.translate(None, string.punctuation)
+        if self.tokenizer_type=="tweet":
+            list_of_words = self.tokenizer.tokenize(sentence)
+        else:
+            list_of_words = self.contextualizer.parse_input(sentence)
         candidate_corrected = []
         for i, word in enumerate(list_of_words):
-            context_predictions = np.exp(-20*np.array(self.contextualizer.predict(list_of_words, target_pos=i)))
-            similarity = np.exp(-np.array(self.corrector.get_similarity(word)))
-            final_score = similarity*context_predictions
+            if word[0]=="#":
+                #Keep the hashtags with no modification
+                candidate_corrected.append(word)
+            else:
+                context_predictions = np.exp(-20*np.array(self.contextualizer.predict(list_of_words, target_pos=i)))
+                similarity = np.exp(-np.array(self.corrector.get_similarity(word)))
+                final_score = similarity*context_predictions
 
-            corrected_word = self.contextualizer.index2word[np.argmax(final_score)]
-            # Changing the initial word in the sentence so that its correction can help the contextualizer
-            list_of_words[i] = corrected_word
-            candidate_corrected.append(corrected_word)
+                corrected_word = self.contextualizer.index2word[np.argmax(final_score)]
+                # Changing the initial word in the sentence so that its correction can help the contextualizer
+                list_of_words[i] = corrected_word
+                candidate_corrected.append(corrected_word)
         print " ".join(candidate_corrected)
         return " ".join(candidate_corrected)
 
