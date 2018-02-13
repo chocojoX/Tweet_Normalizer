@@ -19,8 +19,6 @@ class Normalizor(object):
 
     def predict(self, sentence):
         sentence = sentence.lower()
-        if not self.keep_punctuation:
-            sentence = sentence.translate(None, string.punctuation)
         if self.tokenizer_type=="tweet":
             list_of_words = self.tokenizer.tokenize(sentence)
         else:
@@ -39,8 +37,11 @@ class Normalizor(object):
                 # Changing the initial word in the sentence so that its correction can help the contextualizer
                 list_of_words[i] = corrected_word
                 candidate_corrected.append(corrected_word)
-        print " ".join(candidate_corrected)
-        return " ".join(candidate_corrected)
+        candidate_corrected = " ".join(candidate_corrected)
+        if not self.keep_punctuation:
+            candidate_corrected = candidate_corrected.translate(None, string.punctuation)
+        print candidate_corrected
+        return candidate_corrected
 
 
 if __name__=="__main__":
