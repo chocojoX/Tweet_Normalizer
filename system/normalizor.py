@@ -7,13 +7,14 @@ import time
 
 
 class Normalizor(object):
-    def __init__(self, tokenizer="tweet", punctuation=True):
+    def __init__(self, tokenizer="tweet", punctuation=True, verbose=1):
         self.contextualizer = Contextualizer()
         self.corrector = Corrector(word2index=self.contextualizer.word2index, index2word=self.contextualizer.index2word)
         self.tokenizer_type = tokenizer
         self.keep_punctuation = punctuation
         if self.tokenizer_type=="tweet":
             self.tokenizer = TweetTokenizer()
+        self.verbose = verbose
 
 
 
@@ -40,7 +41,8 @@ class Normalizor(object):
         candidate_corrected = " ".join(candidate_corrected)
         if not self.keep_punctuation:
             candidate_corrected = candidate_corrected.translate(None, string.punctuation)
-        print candidate_corrected
+        if self.verbose>0:
+            print candidate_corrected
         return candidate_corrected
 
 
